@@ -21,7 +21,7 @@ La aplicacion esta escrito en *Python* y se utiliza:
 
 ## Diagrama de clases
 
-![diagrama de clases](https://github.com/Andrescpyo/programming_models/programming_models.pdf)
+![diagrama de clases](programming_models.pdf)
 
 ## Autores ✒️
 
