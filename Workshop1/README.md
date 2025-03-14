@@ -21,8 +21,9 @@ La aplicacion esta escrito en *Python* y se utiliza:
 
 ## Diagrama de clases
 
-![diagrama de clases](programming_models.pdf)
+![diagrama de clases](Workshop1/Diagrams/image.png)
 
+con mas detalle en:
 ## Autores ✒️
 
 -Andres Cerdas Padilla - *20231020053*
