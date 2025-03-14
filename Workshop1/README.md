@@ -23,7 +23,7 @@ La aplicacion esta escrito en *Python* y se utiliza:
 
 ![diagrama de clases](Workshop1/Diagrams/image.png)
 
-con mas detalle en:
+con mas detalle en: Workshop1/Diagrams/programming_models.pdf
 ## Autores ✒️
 
 -Andres Cerdas Padilla - *20231020053*
