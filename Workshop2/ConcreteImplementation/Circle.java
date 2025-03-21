@@ -2,7 +2,7 @@ package Workshop2.ConcreteImplementation;
 import java.awt.Graphics;
 import Workshop2.Interface.Shape;
 
-// Concrete class
+// Concrete Implementation
 
 public class Circle implements Shape {
     @Override
