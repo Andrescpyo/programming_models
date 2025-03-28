@@ -16,5 +16,5 @@ class PracticaSigleton {
 }
 
 Peluqueria <-- PracticaSigleton : uses
-
+Peluqueria <-- Peluqueria
 @endumlS
