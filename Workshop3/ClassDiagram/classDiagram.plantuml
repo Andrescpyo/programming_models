@@ -1,0 +1,20 @@
+@startuml Peluqueria
+class Peluqueria {
+    - static instance: Peluqueria
+    - nombre: String
+    - direccion: String
+    - Peluqueria(nombre: String, direccion: String)
+    + static getInstance(): Peluqueria
+    + mostrarInformacion(): void
+    + getNombre(): String
+    + getDireccion(): String
+}
+
+class PracticaSigleton {
+    + main(args: String[]): void
+    + menu(): int
+}
+
+Peluqueria <-- PracticaSigleton : uses
+
+@endumlS
