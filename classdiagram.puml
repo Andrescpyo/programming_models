@@ -1,1 +1,134 @@
-classdiacram
+@startuml diagramClass
+
+' Establecer algunas opciones de estilo (puedes ajustar si es necesario)
+skinparam backgroundColor #EEEBDC
+skinparam classBorderColor black
+skinparam classFontColor black
+skinparam classFontSize 10
+skinparam classFontStyle bold
+skinparam packageBorderColor #808080
+skinparam packageFontColor #000000
+skinparam packageFontSize 9
+skinparam arrowColor #000000
+skinparam associationFontColor #000000
+skinparam associationFontSize 8
+skinparam associationFontStyle normal
+
+' Definición de los paquetes (carpetas)
+package "abstractfactory" as af {
+  interface AbstractFactoryElementos {
+    +crearPuerta(): ElementoComun
+    +crearVentana(): ElementoComun
+  }
+  class ElementosComunesFactory implements AbstractFactoryElementos {
+    +crearPuerta(): Puerta
+    +crearVentana(): Ventana
+  }
+}
+
+package "builder" as b {
+  class ResidenciaBuilder {
+    -factory: AbstractFactoryElementos
+    +ResidenciaBuilder(factory: AbstractFactoryElementos)
+    +construirResidencia(nombre: String): Residencia
+  }
+}
+
+package "clasesConcretas" as cc {
+  abstract class Construccion {
+    #nombre: String
+    +Construccion(nombre: String)
+    +getNombre(): String
+    +mostrarInformacion(area: JTextArea) {abstract}
+  }
+  class Departamento extends Construccion {
+    -elementos: List<ElementoComun>
+    +Departamento(nombre: String)
+    +agregarElemento(elemento: ElementoComun)
+    +getElementos(): List<ElementoComun>
+    +mostrarInformacion(area: JTextArea)
+  }
+  class Piso extends Construccion {
+    -departamentos: List<Departamento>
+    +Piso(nombre: String)
+    +agregarDepartamento(depto: Departamento)
+    +getDepartamentos(): List<Departamento>
+    +mostrarInformacion(area: JTextArea)
+  }
+  class Residencia extends Construccion {
+    -pisos: List<Piso>
+    +Residencia(nombre: String)
+    +agregarPiso(piso: Piso)
+    +getPisos(): List<Piso>
+    +mostrarInformacion(area: JTextArea)
+  }
+}
+
+package "prototype" as p {
+  interface ElementoComun extends Cloneable {
+    +clonar(): ElementoComun
+    +mostrar(area: JTextArea)
+  }
+  class Puerta implements ElementoComun {
+    +clonar(): Puerta
+    +mostrar(area: JTextArea)
+  }
+  class Ventana implements ElementoComun {
+    +clonar(): Ventana
+    +mostrar(area: JTextArea)
+  }
+}
+
+package "singleton" as s {
+  class EmpresaConstructora {
+    -instancia: EmpresaConstructora {static}
+    -EmpresaConstructora()
+    +getInstancia(): EmpresaConstructora {static}
+    +construirResidencia(residencia: Residencia, area: JTextArea)
+  }
+}
+
+package "ui" as u {
+  class Main {
+    +main(args: String[]) {static}
+  }
+}
+
+' Relaciones entre las clases
+
+' Abstract Factory
+af.ElementosComunesFactory ..|> af.AbstractFactoryElementos
+af.AbstractFactoryElementos ..> p.ElementoComun : creates/uses
+
+' Builder
+b.ResidenciaBuilder ..> af.AbstractFactoryElementos
+b.ResidenciaBuilder --o cc.Residencia
+
+' Clases Concretas
+cc.Departamento --|> cc.Construccion
+cc.Piso --|> cc.Construccion
+cc.Residencia --|> cc.Construccion
+cc.Departamento o-- "0..*" p.ElementoComun : elementos
+cc.Piso o-- "0..*" cc.Departamento : departamentos
+cc.Residencia o-- "0..*" cc.Piso : pisos
+
+' Prototype
+p.Puerta ..|> p.ElementoComun
+p.Ventana ..|> p.ElementoComun
+
+' Singleton
+u.Main ..> s.EmpresaConstructora
+
+' UI usa las clases construidas
+u.Main ..> b.ResidenciaBuilder
+u.Main ..> af.ElementosComunesFactory
+u.Main ..> cc.Residencia
+
+' Posicionamiento relativo de los paquetes (intentando mantener la disposición)
+b -- af
+af -[right]-> cc
+s -- cc
+
+p -[hidden]-> u
+
+@enduml
