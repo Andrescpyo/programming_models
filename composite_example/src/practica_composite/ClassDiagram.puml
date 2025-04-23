@@ -1,0 +1,56 @@
+@startuml class_diagram
+' Define la interfaz Componente
+interface Item_comp {
+  +getNombre(): String
+}
+
+' Define la clase Hoja
+class Producto implements Item_comp {
+  -nombre: String
+  +Producto(nombre: String)
+  +getNombre(): String
+}
+
+' Define la clase Compuesto
+class Paquete implements Item_comp {
+  -nombre: String
+  -items: List<Item_comp>
+  +Paquete(nombre: String)
+  +agregar(item: Item_comp)
+  +getNombre(): String
+  +getItems(): List<Item_comp>
+  +crearNodo(): DefaultMutableTreeNode
+}
+
+' Relaciones
+Item_comp <|-- Producto : implements
+Item_comp <|-- Paquete : implements
+Paquete o-- Item_comp : contains
+
+' Notas para explicar el patrón
+' note as note_component
+'  La interfaz Item_comp declara la operación común
+'  para hojas y compuestos.
+'end note
+'
+'note as note_leaf
+'  La clase Producto representa un objeto individual (Hoja).
+'  No tiene hijos.
+'end note
+'
+'note as note_composite
+'  La clase Paquete representa un objeto compuesto.
+'  Puede contener otros Item_comp (hojas o compuestos).
+'  Implementa operaciones para gestionar sus hijos.
+'end note
+'
+'note as note_composition
+'  La relación de agregación (o--) indica que un Paquete
+'  puede contener múltiples Item_comp.
+'end note
+'
+'note_component . Item_comp
+'note_leaf . Producto
+'note_composite . Paquete
+'note_composition . Paquete
+@enduml
