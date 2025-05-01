@@ -1,0 +1,54 @@
+@startuml flyweightDiagram
+package flyweight {
+  interface Figura {
+    +dibujar(g: Graphics, x: int, y: int, size: int, color: Color)
+  }
+
+  class Circulo implements Figura {
+    +dibujar(g: Graphics, x: int, y: int, size: int, color: Color)
+  }
+
+  class Cuadrado implements Figura {
+    +dibujar(g: Graphics, x: int, y: int, size: int, color: Color)
+  }
+
+  class Triangulo implements Figura {
+    +dibujar(g: Graphics, x: int, y: int, size: int, color: Color)
+  }
+
+  class FiguraFactory {
+    -figuras: HashMap<String, Figura>
+    +getFigura(tipo: String): Figura
+    {static}
+  }
+}
+
+package main {
+  class Main {
+    +main(args: String[])
+    {static}
+  }
+}
+
+package ui {
+  class VentanaPrincipal extends JFrame {
+    -panelDibujo: JPanel
+    -figuraActual: String
+    -cantidad: int
+    -colores: Color[]
+    -figuraCompartida: Figura
+    +VentanaPrincipal()
+    -crearFiguras(tipo: String): void
+    -generarColoresAleatorios(): void
+  }
+}
+
+flyweight.Figura <|-- flyweight.Circulo
+flyweight.Figura <|-- flyweight.Cuadrado
+flyweight.Figura <|-- flyweight.Triangulo
+flyweight.FiguraFactory ..> flyweight.Figura : creates/manages
+ui.VentanaPrincipal ..> flyweight.FiguraFactory : uses
+ui.VentanaPrincipal ..> flyweight.Figura : uses
+main.Main ..> ui.VentanaPrincipal : creates
+
+@enduml
