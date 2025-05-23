@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/E:/carpeta_modelos/Patrones_comportamiento/Practica_interpretador/src/practica_interpretador/Practica_interpretador.java</file>
+            <file>file:/E:/carpeta_modelos/Patrones_comportamiento/Practica_interpretador/src/terminales/Expresion_numero.java</file>
+            <file>file:/E:/carpeta_modelos/Patrones_comportamiento/Practica_interpretador/src/terminales/expresion_suma.java</file>
+            <file>file:/E:/carpeta_modelos/Patrones_comportamiento/Practica_interpretador/src/Contexto/Analizador.java</file>
+            <file>file:/E:/carpeta_modelos/Patrones_comportamiento/Practica_interpretador/src/abstraccion/Expresion.java</file>
+            <file>file:/E:/carpeta_modelos/Patrones_comportamiento/Practica_interpretador/src/terminales/expresion_menos.java</file>
+        </group>
+    </open-files>
+</project-private>

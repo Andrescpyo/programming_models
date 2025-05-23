@@ -1,0 +1,77 @@
+@startuml InterpreterDiagram
+skinparam classAttributeIconSize 0
+
+
+' Paquete Abstraccion'
+package "abstraccion" {
+    interface Expresion {
+        + interprete(pil: Stack<Integer>): void
+    }
+}
+
+' Paquete Terminales '
+package "terminales" {
+    class expresion_menos {
+        + interprete(pil: Stack<Integer>): void
+    }
+
+    class Expresion_numero {
+        - Num: int
+        + Expresion_numero(num: int)
+        + interprete(pil: Stack<Integer>): void
+    }
+
+    class expresion_suma {
+        + interprete(pil: Stack<Integer>): void
+    }
+}
+
+' Paquete Contexto '
+package "Contexto" {
+    class Analizador {
+        - arbol: ArrayList<Expresion>
+        + Analizador(pil: String)
+        + evaluar(): int
+    }
+}
+
+' Paquete practica_interpretador '
+package "practica_interpretador" {
+    class Practica_interpretador {
+        + {static} main(args: String[]): void
+    }
+
+    class CalculadoraGUI {
+        - pantalla: JTextField
+        - expresionRPN: StringBuilder
+        + CalculadoraGUI()
+        + actionPerformed(e: ActionEvent): void
+        + {static} main(args: String[]): void
+    }
+}
+
+' Relaciones '
+
+' Implementación de la interfaz Expresion '
+Expresion <|.. expresion_menos : implements
+Expresion <|.. Expresion_numero : implements
+Expresion <|.. expresion_suma : implements
+
+' Analizador contiene Expresiones (Agregación o Composición) '
+Analizador "1" -- "0..*" Expresion : contiene >
+
+' CalculadoraGUI utiliza Analizador '
+CalculadoraGUI ..> Analizador : usa >
+
+' Practica_interpretador inicia CalculadoraGUI '
+Practica_interpretador ..> CalculadoraGUI : inicia >
+
+' Dependencia de util.Stack '
+Expresion <.. java.util.Stack
+expresion_menos <.. java.util.Stack
+Expresion_numero <.. java.util.Stack
+expresion_suma <.. java.util.Stack
+Analizador <.. java.util.Stack
+Analizador <.. java.util.ArrayList
+
+@enduml
