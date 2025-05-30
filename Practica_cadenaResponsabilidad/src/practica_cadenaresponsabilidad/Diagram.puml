@@ -1,0 +1,74 @@
+@startuml Chain of Responsibility
+' Configuración general del diagrama
+skinparam classAttributeIconSize 0
+hide empty members
+
+' Definición de la interfaz Handler
+interface "Manejo_principal" as Handler {
+    + manejarPeticion(peticion: String, historial: StringBuilder): void
+}
+
+' Definición de los Concrete Handlers
+class "Profesor" as Profesor {
+    - siguiente: Manejo_principal
+    + Profesor(siguiente: Manejo_principal)
+    + manejarPeticion(peticion: String, historial: StringBuilder): void
+}
+
+class "Coordinacion" as Coordinacion {
+    - siguiente: Manejo_principal
+    + Coordinacion(siguiente: Manejo_principal)
+    + manejarPeticion(peticion: String, historial: StringBuilder): void
+}
+
+class "Decanatura" as Decanatura {
+    - siguiente: Manejo_principal
+    + Decanatura(siguiente: Manejo_principal)
+    + manejarPeticion(peticion: String, historial: StringBuilder): void
+}
+
+class "Rectoria" as Rectoria {
+    + Rectoria()
+    + manejarPeticion(peticion: String, historial: StringBuilder): void
+}
+
+' Definición de la clase Cliente
+class "InterfazGrafica" as InterfazGrafica {
+    - cadena: Manejo_principal
+    + InterfazGrafica()
+    - inicializarCadenaResponsabilidad(): void
+    - hacerPeticion(e: ActionEvent): void
+}
+
+' Definición de la clase Principal (donde se ejecuta la aplicación)
+class "Practica_cadenaResponsabilidad" as Principal {
+    + main(args: String[]): void
+}
+
+' Relaciones entre los elementos del patrón
+
+' 1. Los Concrete Handlers implementan la interfaz Handler.
+Profesor .up.|> Handler
+Coordinacion .up.|> Handler
+Decanatura .up.|> Handler
+Rectoria .up.|> Handler
+
+' 2. Los Concrete Handlers tienen una referencia al siguiente Handler.
+Profesor "1" --> "1" Handler : siguiente >
+Coordinacion "1" --> "1" Handler : siguiente >
+Decanatura "1" --> "1" Handler : siguiente >
+' Rectoria no tiene un siguiente, ya que es el final de la cadena.
+
+' 3. El Cliente conoce al primer Handler de la cadena.
+InterfazGrafica "1" --> "1" Handler : cadena >
+
+' 4. La clase principal crea una instancia del Cliente.
+Principal ..> InterfazGrafica : crea
+
+' Notas para explicar el patrón
+note top of Handler : **Handler**\nDefine la interfaz para manejar peticiones.
+note top of Profesor : **Concrete Handler**\nProcesa la petición o la pasa al siguiente.
+note top of Rectoria : **Concrete Handler**\nÚltimo en la cadena, siempre procesa.
+note top of InterfazGrafica : **Client**\nConstruye la cadena y envía la petición inicial.
+
+@enduml
