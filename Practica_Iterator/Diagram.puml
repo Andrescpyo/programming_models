@@ -1,0 +1,99 @@
+@startuml
+
+' Definición de la interfaz Iterator (en Python, es una clase abstracta)
+interface "Iterator <<interface>>" {
+    +__next__(): any
+}
+
+' Definición de la interfaz Aggregate (en Python, es el método __iter__)
+interface "Iterable <<interface>>" {
+    +__iter__(): Iterator
+}
+
+
+' Clases concretas del patrón Iterator
+
+' Concrete Iterator: Iterador Concreto Normal
+class BookIterator {
+    -_collection: list
+    -_position: int
+    +__init__(collection)
+    +__next__(): Book
+}
+
+' Concrete Iterator: Iterador Concreto Inverso
+class ReverseBookIterator {
+    -_collection: list
+    -_position: int
+    +__init__(collection)
+    +__next__(): Book
+}
+
+' Concrete Iterator: Iterador Concreto Alfabético por Autor
+class AuthorAlphabeticalIterator {
+    -_sorted_books: list
+    -_position: int
+    +__init__(collection)
+    +__next__(): Book
+}
+
+' Concrete Aggregate: La colección de libros
+class BookCollection {
+    -_books: list<Book>
+    +add_book(book: Book)
+    +__iter__(): BookIterator
+    +get_reverse_iterator(): ReverseBookIterator
+    +get_author_alphabetical_iterator(): AuthorAlphabeticalIterator
+    +__len__(): int
+}
+
+' Elemento: El objeto que se itera
+class Book {
+    -title: str
+    -author: str
+    -year: int
+    +__init__(title, author, year)
+    +__str__(): str
+}
+
+' Cliente: La aplicación GUI que usa el patrón
+class LibraryApp {
+    -master: Tk
+    -library: BookCollection
+    +__init__(master)
+    -_load_books()
+    +create_widgets()
+    +display_books(iteration_type)
+}
+
+
+' Relaciones entre las clases
+
+' Los Iteradores Concretos implementan la interfaz Iterator
+BookIterator .up.|> Iterator
+ReverseBookIterator .up.|> Iterator
+AuthorAlphabeticalIterator .up.|> Iterator
+
+' El Aggregate Concreto implementa la interfaz Iterable
+BookCollection .up.|> Iterable
+
+' El Aggregate Concreto tiene una composición con los elementos (libros)
+BookCollection *-- "0..*" Book : contains >
+
+' El Aggregate Concreto crea (instancia) los Iteradores Concretos
+BookCollection ..> BookIterator : creates
+BookCollection ..> ReverseBookIterator : creates
+BookCollection ..> AuthorAlphabeticalIterator : creates
+
+' Los Iteradores Concretos tienen una asociación con el Aggregate
+BookIterator ..> BookCollection
+ReverseBookIterator ..> BookCollection
+AuthorAlphabeticalIterator ..> BookCollection
+
+' El Cliente utiliza el Aggregate
+LibraryApp --> BookCollection : uses >
+
+' El Cliente indirectamente utiliza los Iteradores (a través del Aggregate)
+LibraryApp ..> Iterator : uses >
+
+@enduml
