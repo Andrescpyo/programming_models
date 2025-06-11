@@ -1,0 +1,53 @@
+@startuml state
+!theme plain
+
+title Diagrama de Clases - Patrón State (Ascensor) - Corregido
+
+  class Ascensor {
+    - estado: Estado_ascensor  // La referencia es a la interfaz
+    - uso: int
+    - enMantenimiento: boolean
+    + setEstado(estado: Estado_ascensor): void
+    + obtenerEstado(): String
+    + usarAscensor(piso: int): String
+    + resetearUso(): void
+  }
+
+  interface Estado_ascensor {
+    + getNombreEstado(): String
+  }
+
+  class Enservicio implements Estado_ascensor {
+    + getNombreEstado(): String
+  }
+  class Mantenimiento implements Estado_ascensor {
+    + getNombreEstado(): String
+  }
+
+  class AscensorGUI {
+    - ascensor: Ascensor
+    - enServicio: Enservicio
+    - mantenimiento: Mantenimiento
+    + AscensorGUI()
+    - actualizarEstado(estadoTexto: String): void
+    - mostrarMensaje(mensaje: String, titulo: String): void
+    - agregarAlHistorial(texto: String): void
+    + main(args: String[]): void {static}
+  }
+
+' El Contexto (Ascensor) tiene una referencia a la Interfaz de Estado
+Ascensor o-- Estado_ascensor : tiene un
+
+' Los Estados Concretos implementan la Interfaz de Estado
+Enservicio .up.|> Estado_ascensor
+Mantenimiento .up.|> Estado_ascensor
+
+' El Cliente (AscensorGUI) usa el Contexto
+AscensorGUI o-- Ascensor : usa
+
+' El Cliente (AscensorGUI) crea y conoce las implementaciones concretas de los estados
+' para poder establecer el estado del Contexto.
+AscensorGUI ..> Enservicio : crea / usa
+AscensorGUI ..> Mantenimiento : crea / usa
+
+@enduml

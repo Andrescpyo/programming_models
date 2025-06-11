@@ -1,0 +1,130 @@
+@startuml
+!theme plain
+skinparam style strictinheritance
+
+title Diagrama de Clases - Patrón Iterator (Simplificado)
+
+' Clases del modelo: Detalles esenciales y el getter relevante para la iteración
+package "model" {
+    class Book {
+        - title: String
+        - author: String
+        - year: int
+        + getAuthor(): String
+        + toString(): String
+    }
+    class Magazine {
+        - title: String
+        - editor: String
+        - year: int
+        + getAuthor(): String <<note: returns editor>>
+        + toString(): String
+    }
+    class Thesis {
+        - title: String
+        - author: String
+        - year: int
+        + getAuthor(): String
+        + toString(): String
+    }
+}
+
+' Interfaces y Clases del Patrón Iterator
+package "iterator" {
+    interface MyIterator<T> <<interface, Iterator>> {
+        + hasNext(): boolean
+        + next(): T
+    }
+
+    ' Representación simplificada de los iteradores concretos para cada tipo
+    ' y cada modo de iteración (normal, reverso, por autor)
+    abstract class AbstractItemIterator<T> implements MyIterator {
+        # items: List<T>
+        # index: int
+        + AbstractItemIterator(items: List<T>)
+        + hasNext(): boolean
+        + next(): T
+    }
+
+    class BookIterator extends AbstractItemIterator {}
+    class ReverseBookIterator extends AbstractItemIterator{}
+    class AuthorAlphabeticalBookIterator extends AbstractItemIterator{}
+
+    class MagazineIterator extends AbstractItemIterator {}
+    class ReverseMagazineIterator extends AbstractItemIterator{}
+    class AuthorAlphabeticalMagazineIterator extends AbstractItemIterator{}
+
+    class ThesisIterator extends AbstractItemIterator{}
+    class ReverseThesisIterator extends AbstractItemIterator {}
+    class AuthorAlphabeticalThesisIterator extends AbstractItemIterator {}
+
+    ' Relación con la interfaz Iterator estándar de Java (si es relevante mostrarla)
+    java.util.Iterator <|-- MyIterator
+}
+
+' Colecciones (Agregados)
+package "collection" {
+    interface MyCollection<T> <<interface, Aggregate>> {
+        + addItem(item: T): void
+        + createIterator(): MyIterator<T>
+        + createReverseIterator(): MyIterator<T>
+        + createAuthorAlphabeticalIterator(): MyIterator<T>
+    }
+
+    ' Representación simplificada de las colecciones concretas
+    abstract class AbstractCollection<T> implements MyCollection {
+        # items: List<T>
+        + addItem(item: T): void
+        + createIterator(): MyIterator<T>
+        + createReverseIterator(): MyIterator<T>
+        + createAuthorAlphabeticalIterator(): MyIterator<T>
+        + loadSampleData(): void
+    }
+
+    class BookCollection extends AbstractCollection {}
+    class MagazineCollection extends AbstractCollection {}
+    class ThesisCollection extends AbstractCollection {}
+
+    ' Relaciones de contención (un agregado contiene elementos)
+    BookCollection o-- Book
+    MagazineCollection o-- Magazine
+    ThesisCollection o-- Thesis
+
+    ' Relaciones de creación de iteradores (el agregado crea iteradores)
+    BookCollection --> BookIterator
+    BookCollection --> ReverseBookIterator
+    BookCollection --> AuthorAlphabeticalBookIterator
+
+    MagazineCollection --> MagazineIterator
+    MagazineCollection --> ReverseMagazineIterator
+    MagazineCollection --> AuthorAlphabeticalMagazineIterator
+
+    ThesisCollection --> ThesisIterator
+    ThesisCollection --> ReverseThesisIterator
+    ThesisCollection --> AuthorAlphabeticalThesisIterator
+}
+
+' La aplicación (Cliente)
+package "ui" {
+    class LibraryApp <<Client>> {
+        - currentCollection: MyCollection<?>
+        - bookCollection: BookCollection
+        - magazineCollection: MagazineCollection
+        - thesisCollection: ThesisCollection
+        + LibraryApp()
+        - loadCollection(type: String): void
+        - display(mode: String): void
+    }
+    class Main {
+        + main(args: String[]): void {static}
+    }
+
+    LibraryApp ..> MyCollection : uses
+    LibraryApp ..> MyIterator : uses
+    LibraryApp o-- BookCollection
+    LibraryApp o-- MagazineCollection
+    LibraryApp o-- ThesisCollection
+    Main ..> LibraryApp : creates
+}
+
+@enduml
