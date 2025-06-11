@@ -1,0 +1,194 @@
+@startuml
+
+title Diagrama de Clases - Patrón Iterator
+
+package "model" {
+    class Book {
+        -title: String
+        -author: String
+        -genre: String
+        -year: int
+        +Book(title: String, author: String, genre: String, year: int)
+        +getAuthor(): String
+        +toString(): String
+    }
+    class Magazine {
+        -title: String
+        -editor: String
+        -edition: int
+        -year: int
+        +Magazine(title: String, editor: String, edition: int, year: int)
+        +getTitle(): String
+        +getAuthor(): String <<note: returns editor>>
+        +getEdition(): int
+        +getYear(): int
+        +toString(): String
+    }
+    class Thesis {
+        -title: String
+        -author: String
+        -advisor: String
+        -year: int
+        +Thesis(title: String, author: String, advisor: String, year: int)
+        +getTitle(): String
+        +getAuthor(): String
+        +getAdvisor(): String
+        +getYear(): int
+        +toString(): String
+    }
+}
+
+package "iterator" {
+    interface MyIterator <<interface, Iterator>> {
+        +hasNext(): boolean
+        +next(): T
+    }
+
+    class BookIterator  {
+        -books: List<Book>
+        -index: int
+        +BookIterator(books: List<Book>)
+        +hasNext(): boolean
+        +next(): Book
+    }
+    class ReverseBookIterator {
+        -books: List<Book>
+        -index: int
+        +ReverseBookIterator(books: List<Book>)
+        +hasNext(): boolean
+        +next(): Book
+    }
+    class AuthorAlphabeticalBookIterator {
+        -sortedBooks: List<Book>
+        -index: int
+        +AuthorAlphabeticalBookIterator(books: List<Book>)
+        +hasNext(): boolean
+        +next(): Book
+    }
+
+    class MagazineIterator {
+        -magazines: List<Magazine>
+        -index: int
+        +MagazineIterator(magazines: List<Magazine>)
+        +hasNext(): boolean
+        +next(): Magazine
+    }
+    class ReverseMagazineIterator {
+        -magazines: List<Magazine>
+        -index: int
+        +ReverseMagazineIterator(magazines: List<Magazine>)
+        +hasNext(): boolean
+        +next(): Magazine
+    }
+    class AuthorAlphabeticalMagazineIterator {
+        -sortedMagazines: List<Magazine>
+        -index: int
+        +AuthorAlphabeticalMagazineIterator(magazines: List<Magazine>)
+        +hasNext(): boolean
+        +next(): Magazine
+    }
+
+    class ThesisIterator {
+        -theses: List<Thesis>
+        -index: int
+        +ThesisIterator(theses: List<Thesis>)
+        +hasNext(): boolean
+        +next(): Thesis
+    }
+    class ReverseThesisIterator {
+        -theses: List<Thesis>
+        -index: int
+        +ReverseThesisIterator(theses: List<Thesis>)
+        +hasNext(): boolean
+        +next(): Thesis
+    }
+    class AuthorAlphabeticalThesisIterator {
+        -sortedTheses: List<Thesis>
+        -index: int
+        +AuthorAlphabeticalThesisIterator(theses: List<Thesis>)
+        +hasNext(): boolean
+        +next(): Thesis
+    }
+
+}
+
+package "collection" {
+    interface MyCollection <<interface, Aggregate>> {
+        +addItem(item: T): void
+        +createIterator(): MyIterator<T>
+        +createReverseIterator(): MyIterator<T>
+        +createAuthorAlphabeticalIterator(): MyIterator<T>
+    }
+
+    class BookCollection {
+        -books: List<Book>
+        +addItem(item: Book): void
+        +createIterator(): MyIterator<Book>
+        +createReverseIterator(): MyIterator<Book>
+        +createAuthorAlphabeticalIterator(): MyIterator<Book>
+        +size(): int
+        +loadSampleData(): void
+    }
+    class MagazineCollection {
+        -magazines: List<Magazine>
+        +addItem(item: Magazine): void
+        +createIterator(): MyIterator<Magazine>
+        +createReverseIterator(): MyIterator<Magazine>
+        +createAuthorAlphabeticalIterator(): MyIterator<Magazine>
+        +loadSampleData(): void
+    }
+    class ThesisCollection {
+        -theses: List<Thesis>
+        +addItem(item: Thesis): void
+        +createIterator(): MyIterator<Thesis>
+        +createReverseIterator(): MyIterator<Thesis>
+        +createAuthorAlphabeticalIterator(): MyIterator<Thesis>
+        +loadSampleData(): void
+    }
+
+    BookCollection o-- Book : contains >
+    MagazineCollection o-- Magazine : contains >
+    ThesisCollection o-- Thesis : contains >
+
+    BookCollection --> BookIterator : creates
+    BookCollection --> ReverseBookIterator : creates
+    BookCollection --> AuthorAlphabeticalBookIterator : creates
+
+    MagazineCollection --> MagazineIterator : creates
+    MagazineCollection --> ReverseMagazineIterator : creates
+    MagazineCollection --> AuthorAlphabeticalMagazineIterator : creates
+
+    ThesisCollection --> ThesisIterator : creates
+    ThesisCollection --> ReverseThesisIterator : creates
+    ThesisCollection --> AuthorAlphabeticalThesisIterator : creates
+}
+
+package "ui" {
+    class LibraryApp <<Client>> {
+        -textArea: JTextArea
+        -currentCollection: MyCollection<?>
+        -currentType: String
+        -buttonPanel: JPanel
+        -bookCollection: BookCollection
+        -magazineCollection: MagazineCollection
+        -thesisCollection: ThesisCollection
+        +LibraryApp()
+        -showMainMenu(): void
+        -loadCollection(type: String): void
+        -showCollectionView(): void
+        -display(mode: String): void
+        -agregarElemento(): void
+    }
+    class Main {
+        +main(args: String[]): void {static}
+    }
+
+    LibraryApp ..> MyCollection : uses
+    LibraryApp ..> MyIterator : uses
+    LibraryApp o-- BookCollection : aggregates
+    LibraryApp o-- MagazineCollection : aggregates
+    LibraryApp o-- ThesisCollection : aggregates
+    Main ..> LibraryApp : creates
+}
+
+@enduml
